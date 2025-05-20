@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fast-food-production-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fast-food-production
+  template:
+    metadata:
+      labels:
+        app: fast-food-production
+    spec:
+      containers:
+        - name: fast-food-production
+          image: carloslima/production-service:1.0.0
+          ports:
+            - containerPort: 3003
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: uri
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: APP_ENV
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: LOG_LEVEL
+            - name: ORDER_SERVICE_API
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: ORDER_SERVICE_API
+            - name: MERCADO_PAGO_API
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: MERCADO_PAGO_API
+            - name: MERCADO_PAGO_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: MERCADO_PAGO_CLIENT_ID
+            - name: MERCADO_PAGO_CLIENT_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: MERCADO_PAGO_CLIENT_SECRET
+            - name: MERCADO_PAGO_QR_CODE_API
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: MERCADO_PAGO_QR_CODE_API
+            - name: MERCADO_PAGO_WEBHOOK
+              valueFrom:
+                configMapKeyRef:
+                  name: fast-food-production-config
+                  key: MERCADO_PAGO_WEBHOOK
