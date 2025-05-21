@@ -13,7 +13,7 @@ export class HealthCheckController {
 
     public setupRoutes(): Router {
         this.router.get('/', this.healthCheck.bind(this))
-        this.router.get('/order', this.orderHealthCheck.bind(this)) // Nova rota
+        this.router.get('/production', this.productionHealthCheck.bind(this)) // Nova rota
         return this.router
     }
 
@@ -60,14 +60,14 @@ export class HealthCheckController {
 
     /**
      * @swagger
-     * /health/order:
+     * /health/production:
      *   get:
-     *     summary: Verifica a saúde do serviço Order
+     *     summary: Verifica a saúde do serviço Production
      *     tags: [Health]
-     *     description: Faz uma requisição ao serviço Order e retorna o status de saúde dele.
+     *     description: Faz uma requisição ao serviço Production e retorna o status de saúde dele.
      *     responses:
      *       200:
-     *         description: Serviço Order está saudável
+     *         description: Serviço Production está saudável
      *         content:
      *           application/json:
      *             schema:
@@ -75,7 +75,7 @@ export class HealthCheckController {
      *               example:
      *                 status: OK
      *       500:
-     *         description: Erro ao consultar a saúde do serviço Order
+     *         description: Erro ao consultar a saúde do serviço Production
      *         content:
      *           application/json:
      *             schema:
@@ -83,11 +83,11 @@ export class HealthCheckController {
      *               properties:
      *                 error:
      *                   type: string
-     *                   example: Failed to check order health
+     *                   example: Failed to check production health
      */
-    public async orderHealthCheck(req: Request, res: Response): Promise<void> {
+    public async productionHealthCheck(req: Request, res: Response): Promise<void> {
         try {
-            const response = await fetch(`http://order-service:3001/health`, {
+            const response = await fetch(`http://production-service:3001/health`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,15 +96,15 @@ export class HealthCheckController {
 
             if (!response.ok) {
                 throw new Error(
-                    `Order service health check failed with status ${response.status}`
+                    `Production service health check failed with status ${response.status}`
                 )
             }
 
             const data = await response.json()
             res.status(200).json(data)
         } catch (error) {
-            console.log('Failed to check order health', error)
-            res.status(500).json({ error: 'Failed to check order health' })
+            console.log('Failed to check production health', error)
+            res.status(500).json({ error: 'Failed to check production health' })
         }
     }
 }

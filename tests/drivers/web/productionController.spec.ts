@@ -1,4 +1,4 @@
-import { ProductionController } from '../../../src/drivers/web/orderController'
+import { ProductionController } from '../../../src/drivers/web/productionController'
 
 const BASE_URL = 'http://mock-production-service.com'
 

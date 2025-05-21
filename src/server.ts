@@ -1,22 +1,19 @@
 import express from 'express'
 import { HealthCheckController } from './drivers/web/healthCheckController'
-import { MongoConnection } from './config/mongoConfig'
 import swaggerRouter from './config/swaggerConfig'
 import { HealthCheckUseCase } from './useCases/healthCheck'
-import { OrderController } from './drivers/web/orderController'
+import { ProductionController } from './drivers/web/productionController'
+import { ProductionUseCase } from './useCases/production'
 
 class InitProject {
     public express: express.Application
-    public mongoConnection: MongoConnection
 
     constructor() {
         this.express = express()
-        this.mongoConnection = MongoConnection.getInstance()
     }
 
     async start() {
         try {
-            await this.mongoConnection.connect()
             this.express.use(express.json())
             this.setupRoutes()
             this.startServer()
@@ -26,15 +23,16 @@ class InitProject {
     }
 
     setupRoutes() {
-        // Comunicação com microserviço de pedidos
-        const orderController = new OrderController()
+        // Comunicação com microserviço de produção
+        const productionService = new ProductionUseCase()
+        const productionController = new ProductionController(productionService)
+        this.express.use('/production', productionController.setupRoutes())
 
         // Health Check
         const healthCheckUseCase = new HealthCheckUseCase()
         const routesHealthCheckController = new HealthCheckController(
             healthCheckUseCase
         )
-
         this.express.use('/health', routesHealthCheckController.setupRoutes())
 
         // Swagger
