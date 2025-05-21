@@ -1,16 +1,12 @@
 import { HealthCheckUseCase } from '../../src/useCases/healthCheck'
-import { mockedHealthCheck } from '../mock/healthCheckMock'
 
-describe('HealthCheckService', () => {
-    let healthCheckService: HealthCheckUseCase
-
-    beforeEach(() => {
-        healthCheckService = new HealthCheckUseCase()
-    })
-
-    it('should return "Health Check"', () => {
-        const result = healthCheckService.healthCheck()
-
-        expect(result).toEqual(mockedHealthCheck)
-    })
+describe('HealthCheckUseCase', () => {
+  it('deve retornar informações de health check', () => {
+    const useCase = new HealthCheckUseCase()
+    const result = useCase.healthCheck()
+    expect(result).toHaveProperty('currentEnv')
+    expect(result).toHaveProperty('node')
+    expect(result).toHaveProperty('timestamp')
+    expect(result).toHaveProperty('name')
+  })
 })

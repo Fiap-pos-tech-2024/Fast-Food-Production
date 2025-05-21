@@ -29,7 +29,10 @@ export class ProductionUseCase {
         `${orderServiceApi}/order/${id}/status`,
         data
       );
-      return response.data;
+      return {
+        respose: response.data,
+        status: response.status,
+      }
     } catch (error) {
       console.error("Error updating order:", error);
       throw new Error("Failed to update order");
